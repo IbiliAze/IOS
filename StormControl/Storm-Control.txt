@@ -1,0 +1,7 @@
+s1(config)#
+!
+interface gig0/0
+ storm-control {{ broadcast || multicast || unicast }} level {{ level }}
+ storm-control action {{ shutdown || trap }}
+!
+ 

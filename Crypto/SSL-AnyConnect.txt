@@ -1,0 +1,46 @@
+ciscoasa(config)#
+!
+interface gig0/0
+ nameif inside
+ ip address {{ inside IP address }}
+!
+interface gig0/1
+ nameif outside
+ ip address {{ outside IP address }}
+!
+object network INSIDENET
+ subnet {{ inside subnet & net mask }}
+!
+object network VPNCLIENTS
+ subnet {{ VPN subnet & net mask }}
+!
+nat (inside,outside) source static INSIDENET INSIDENET destination static VPNCLIENTS VPNCLIENTS #NAT exception
+!
+access-list SPLITTUNNEL standard permit {{ inside subnet }}
+!
+ip local pool VPNPOOL {{ VPNCLIENT subnet pool }}
+!
+group-policy VPNPOLICY internal 
+group-policy VPNPOLICY attributes
+ vpn-tunnel-protocol ssl-client
+ split-tunnel-policy tunnelspecified
+ split-tunnel-network0list value SPLITTUNNEL #specify the ACL
+!
+tunnel-group VPNTG type remote-access
+tunnel-group VPNTG general-attributes
+ address-pool VPNPOOL
+ default-group-policy VPNPOLICY
+tunnel-group VPNTG webvpn-attributes
+ group-alias "VPN Users" enable
+!
+username test password cisco priv 15
+username test attributes
+ service-type remote-access
+ group-lock value VPNTG
+!
+webvpn
+ anyconnect image {{ AnyConnect image location }}
+ enable outside
+ anyconnect enable
+ tunnel-group-list enable
+!

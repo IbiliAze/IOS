@@ -1,0 +1,16 @@
+s1(config)#
+!
+ip arp inspection vlan 1
+!
+interface gig0/0 #trunt port
+ ip arp inspection trust
+!
+interface gig0/0
+ ip arp source vlan dhcp-snooping
+!
+
+
+s1#
+show ip arp inspection vlan 1
+show ip arp inspection interface gig0/0
+show ip verify source interface gig0/0

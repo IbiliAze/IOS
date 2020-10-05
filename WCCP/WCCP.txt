@@ -1,0 +1,14 @@
+asa(config)#
+!
+access-list HTTP permit tcp 192.168.0.0 255.255.255.0 any eq https
+access-list MYWSA extended permit tcp host 192.168.0.101 any
+!
+wccp web-cache redirect-list HTTP group-list MYWSA
+wccp interface inside web-cache redirect in
+!
+
+
+
+asa#
+show wccp interfaces
+show wccp web-cache

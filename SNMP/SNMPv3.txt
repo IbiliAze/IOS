@@ -1,0 +1,11 @@
+r1(config)#
+!
+snmp-server view MYVIEW mib-2 included
+snmp-server group MYGROUP v3 priv read MYVIEW
+snmp-server user USER1 MYGROUP v3 auth sha C1sco123! priv aws 256 C1sco123!
+
+
+
+
+r1#
+show snmp view

@@ -1,0 +1,9 @@
+r1#
+debug crypto isakmp sa
+debug crypto ipsec sa
+
+show dmvpn
+show crypto session
+show crypko isakmp sa
+show crypto ipsec sa
+show crypto engine connections active

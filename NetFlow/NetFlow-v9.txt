@@ -1,0 +1,26 @@
+r1(config)#
+!
+flow record MYRECORD
+ match ipv4 destination address
+ match ipv4 tos
+ collect interface output
+ collect counter bytes
+ collect counter packets
+!
+flow exporter MYEXPORTER
+ destination 10.10.10.100
+ source loopback0
+ transport udp 2055
+ export-protocol netflow-v9
+!
+flow monitor MYMONITOR
+ record MYRECORD
+ exporter MYEXPORTER
+!
+interface vlan 100
+ ip flow monitor MYMONITOR input
+
+r1#
+show flow record
+show flow exporter
+show flow monitor

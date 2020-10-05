@@ -1,0 +1,15 @@
+s1(config)#
+!
+aaa new-model
+!
+username backdoor priv 15 password cisco
+!
+aaa authentication login default group tacacs local
+!
+!
+!
+aaa authentication login MYLIST group tacacs
+!
+line vty 0 4
+ login authentication MYLIST
+!

@@ -1,0 +1,29 @@
+s1(config)#
+!
+vtp mode transparent
+!
+vlan {{ VLAN number }}
+ private-vlan isolated
+!
+vlan {{ VLAN number }}
+ private-vlan isolated
+!
+vlan {{ main VLAN number }}
+ private-vlan association add {{ each VLAN number with comma separator }}
+ end
+!
+config term
+!
+interface gig0/0
+ switchport mode private-vlan host 
+ switchport private-vlan host-association 200 201
+!
+interface gig0/1
+ switchport mode private-vlan promiscous
+ switchport private-vlan mapping 200 201,202
+!
+
+
+
+s1#
+show private-vlan

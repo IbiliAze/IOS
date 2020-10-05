@@ -1,0 +1,4 @@
+s1(config)#
+!
+vlan dot1q tag native
+!

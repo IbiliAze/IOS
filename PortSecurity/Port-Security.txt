@@ -1,0 +1,15 @@
+s1(config)#
+!
+interface gig0/0
+ switchport mode access
+ switchport port-security
+ switchport port-security mac-address {{ sticky || MAC address || forbidden }}
+ switchport port-security maximum {{ maximum number of allowed MAC addresses }}
+ switchport port-security violation {{ shutdown || protect || restrict }}
+!
+
+
+s1#
+show mac address-table
+show port-security interface gig0/0
+

@@ -1,0 +1,70 @@
+r1(config)# Hub
+!
+crypto isakmp policy 1
+ encryption aes 256
+ authentication pre-share
+ group 14
+ hash md5
+ lifetime 70000
+!
+crypto isakmp key {{ ISAKMP key }} address 0.0.0.0
+!
+crypto ipsec transform-set {{ IPsec transform-set }} esp-aes-256 esp-sha-hmac
+ mode transport
+!
+crypto ipsec profile {{ IPsec profile }}
+ set transform-set {{ IPsec transform-set }}
+!
+interface tunnel100
+ tunnel source {{ tunnel source interface }}
+ tunnel mode gre multipoint
+ tunnel key {{ tunnel key }}
+ tunnel path-mtu discovery
+ tunnel protection ipsec profile {{ IPsec profile }}
+ ip nhrp network-id {{ NHRP network ID }}
+ ip nhrp authentication {{ password }}
+ ip nhrp map multicast dynamic
+ ip nhrp shortcut
+ ip nhrp redirect
+ ip address {{ IP address & net mask }}
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ no ip next-hop-self eigrp {{ EIGRP ASN }}
+ no ip split-horizon {{ EIGRP ASN }}
+ crypto call admission limit ike sa 3
+!
+router eigrp {{ EIGRP ASN }}
+ network {{ Tunnel IP address }} 0.0.0.255
+ network {{ Interface IP address }} 0.0.0.255
+ network {{ DMZ IP address }} 0.0.0.255
+ no auto-summary
+!
+
+
+r2(config)# Spoke
+nterface tunnel100
+ tunnel source {{ tunnel source interface }}
+ tunnel mode gre multipoint
+ tunnel key {{ tunnel key }}
+ tunnel path-mtu discovery
+ tunnel protection ipsec profile {{ IPsec profile }}
+ ip nhrp network-id {{ NHRP network ID }}
+ ip nhrp authentication {{ password }}
+ ip nhrp map multicast {{ HUB NMBA IP address }}
+ ip nhrp map {{ Hub Tunnel IP address }} {{ Hub NBMA address }}
+ ip nhrp nhs {{ Hub Tunnel IP address }}
+ ip nhrp holdtime 300
+ ip address {{ IP address & net mask }}
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ no ip next-hop-self eigrp {{ EIGRP ASN }}
+ no ip split-horizon {{ EIGRP ASN }}
+ crypto call admission limit ike sa 3
+!
+
+
+r1#
+show dmvpn
+show crypko isakmp sa
+show crypto ipsec sa
+show crypto engine connections active

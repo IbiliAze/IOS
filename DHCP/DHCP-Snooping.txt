@@ -1,0 +1,12 @@
+s1(config)#
+!
+ip dhcp snooping
+!
+interface gig0/0
+ ip dhcp snooping trust
+!
+no ip dhcp snooping information
+
+
+s1#
+show ip dhcp server statistics
